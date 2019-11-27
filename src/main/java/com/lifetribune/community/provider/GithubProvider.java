@@ -6,6 +6,7 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 
+
 import java.io.IOException;
 
 
@@ -43,7 +44,9 @@ public class GithubProvider
         {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
+    /*JSON.parseObject 作用：把string类型的一个JSON对象，自动转换解析成java类的对象*/
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
+            //if (githubUser.getName() == null) System.out.println("未设置名字");
             return githubUser;
         }
         catch (IOException e)
