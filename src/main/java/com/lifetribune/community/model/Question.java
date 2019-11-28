@@ -3,7 +3,7 @@ package com.lifetribune.community.model;
 import lombok.Data;
 
 @Data
-public class Quesstion
+public class Question
 {
     private Integer id;
     private String title;

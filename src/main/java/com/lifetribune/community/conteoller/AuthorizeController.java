@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
@@ -32,7 +34,8 @@ public class AuthorizeController
     @GetMapping("/callback")
     public String callback(@RequestParam(name ="code")String code,
                            @RequestParam(name = "state")String state,
-                           HttpServletRequest request){
+                           HttpServletRequest request,
+                           HttpServletResponse response){
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(client_Secret);
         accessTokenDTO.setCode(code);
@@ -45,12 +48,12 @@ public class AuthorizeController
             User user = new User();
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(user.getGmt_create());
             userMapper.insert(user);
-            //登录成功，写cookie和session
-            request.getSession().setAttribute("user",githubUser);
+            response.addCookie(new Cookie("token",token));
             //使用了redirect：把地址全部去掉，重定向到页面
             return "redirect:/";
         }else{
