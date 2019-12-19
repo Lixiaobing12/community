@@ -1,4 +1,4 @@
-package com.lifetribune.community.conteoller;
+package com.lifetribune.community.controller;
 
 import com.lifetribune.community.dto.AccessTokenDTO;
 import com.lifetribune.community.dto.GithubUser;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -34,7 +33,6 @@ public class AuthorizeController
     @GetMapping("/callback")
     public String callback(@RequestParam(name ="code")String code,
                            @RequestParam(name = "state")String state,
-                           HttpServletRequest request,
                            HttpServletResponse response){
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(client_Secret);
@@ -46,12 +44,15 @@ public class AuthorizeController
         GithubUser githubUser = githubprovider.getUser(accessToken);
         if(githubUser !=null){
             User user = new User();
-            user.setName(githubUser.getName());
-            user.setAccount_id(String.valueOf(githubUser.getId()));
             String token = UUID.randomUUID().toString();
+            user.setName(githubUser.getName());
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             user.setToken(token);
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            user.setBio(githubUser.getBio());
+
             userMapper.insert(user);
             response.addCookie(new Cookie("token",token));
             //使用了redirect：把地址全部去掉，重定向到页面

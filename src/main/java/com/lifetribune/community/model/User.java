@@ -7,8 +7,11 @@ public class User
 {
     private Integer id;
     private String name;
-    private String account_id;
+    private String accountId;
     private String token;
-    private Long gmt_create;
-    private Long gmt_modified;
+    private Long gmtCreate;
+    private Long gmtModified;
+    private String avatarUrl;
+    private String bio;
+
 }

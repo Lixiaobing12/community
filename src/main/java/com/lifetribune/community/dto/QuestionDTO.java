@@ -1,9 +1,10 @@
-package com.lifetribune.community.model;
+package com.lifetribune.community.dto;
 
+import com.lifetribune.community.model.User;
 import lombok.Data;
 
 @Data
-public class Question
+public class QuestionDTO
 {
     private Integer id;
     private String title;
@@ -15,4 +16,5 @@ public class Question
     private Integer viewCount;
     private Integer likeCount;
     private String tag;
+    private User user;
 }
